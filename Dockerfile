@@ -1,5 +1,5 @@
 FROM maven as build 
-WORKDIR /app
+WORKDIR /usr
 COPY . .
 RUN "mvn clean package"
 
