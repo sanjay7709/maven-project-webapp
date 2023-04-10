@@ -1,7 +1,7 @@
 FROM maven as build 
 WORKDIR /usr
 COPY . .
-RUN "mvn clean package"
+RUN mvn clean package
 
 FROM tomcat
 COPY --from=build /target/webapp*.war /usr/local/tomcat/webapp
