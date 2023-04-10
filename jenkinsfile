@@ -7,11 +7,11 @@ pipeline {
                 }
             }
         }
-//         stage ('Maven unit testing') {
-//             steps{
-//                 sh 'mvn clean test'
-//             }
-//         }
+        stage ('Maven unit testing') {
+            steps{
+                sh 'mvn clean test'
+            }
+        }
 //         stage ('Intergration test') {
 //             steps{
 //                 sh 'mvn verify -DskipUnitTests'
