@@ -6,10 +6,9 @@ pipeline {
                 git branch: "main" ,url:"https://github.com/sanjay7709/maven-project-webapp.git"
                 }
             }
-        }
         stage ('Maven unit testing') {
             steps{
-                sh 'mvn clean test'
+                sh "mvn clean test"
             }
         }
 //         stage ('Intergration test') {
@@ -115,5 +114,5 @@ pipeline {
 //                 }
 //             }
 //         }
-//     }
+    }
 }
