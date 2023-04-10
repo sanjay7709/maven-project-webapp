@@ -4,8 +4,8 @@ COPY . .
 RUN "mvn clean package"
 
 FROM tomcat
-COPY /target/webapp*.war /usr/local/tomcat/webapp
-EXPOSE 8080
+COPY --from=build /target/webapp*.war /usr/local/tomcat/webapp
+EXPOSE 9090
 RUN echo "completing setup"
 
 # FROM openjdk:11.0
