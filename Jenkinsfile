@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        Path="$PATH:/usr/share/maven/bin/"
+    }
     stages {
         stage ('Git checkout'){
             steps {
@@ -9,7 +12,7 @@ pipeline {
         stage ('Maven unit testing') {
             steps{
                 script{
-                    def mvnHome= tool name: 'Maven 3.9.1', type: 'maven'
+                    def mvnHome= tool name: 'Maven 3.6.3', type: 'maven'
                     sh "${mvnHome}/bin/mvn clean test"
                 }
             }
@@ -17,7 +20,7 @@ pipeline {
         stage ('Intergration test') {
             steps{
                 script{
-                    def mvnHome= tool name: 'Maven 3.9.1', type: 'maven'
+                    def mvnHome= tool name: 'Maven 3.6.3', type: 'maven'
                     sh "${mvnHome}/bin/mvn verify -DskipUnitTests"
                 }
             }
@@ -25,7 +28,7 @@ pipeline {
         stage ('Maven build') {
             steps{
                 script{
-                    def mvnHome= tool name: 'Maven 3.9.1', type: 'maven'
+                    def mvnHome= tool name: 'Maven 3.6.3', type: 'maven'
                     sh "${mvnHome}/bin/mvn clean package"
                 }
             }
@@ -34,7 +37,7 @@ pipeline {
             steps{
                 script{
                     withSonarQubeEnv(credentialsId: 'sonarqube') {
-                        def mvnHome= tool name: 'Maven 3.9.1', type: 'maven'
+                        def mvnHome= tool name: 'Maven 3.6.3', type: 'maven'
                         sh "${mvnHome}/bin/mvn sonar:sonar"
                      }
                 }
@@ -51,9 +54,20 @@ pipeline {
         stage ('docker image build') {
             steps{
                 script{
-                    sh """  docker image build -t $JOB_NAME:v1.$BUILD_ID .
-                            docker image tag sanjay7709/$JOB_NAME:v1.$BUILD_ID 
-                            docker image tag sanjay7709/$JOB_NAME:latest """
+                    sh "docker build -t $JOB_NAME:v1.$BUILD_ID . "
+                    sh "docker image tag $JOB_NAME:v1.$BUILD_ID sanjay7709/$JOB_NAME:v1.$BUILD_ID"
+                    sh "docker image tag $JOB_NAME:v1.$BUILD_ID sanjay7709/$JOB_NAME:latest"
+                }
+            }
+        }
+        stage ('docker image push') {
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'sanjay7709', variable: 'docker')]) {
+                        sh "docker login -u sanjay7709 -p ${docker}"
+                        sh "docker image push sanjay7709/$JOB_NAME:latest"
+                        sh "docker image push sanjay7709/$JOB_NAME:v1.$BUILD_ID"
+                    }
                 }
             }
         }
