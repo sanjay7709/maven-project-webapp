@@ -8,8 +8,10 @@ pipeline {
             }
         stage ('Maven unit testing') {
             steps{
-                def mvnHome= tool name: 'Apache Maven 3.9.1', type: 'maven'
-                sh "${mvnHome}/bin/mvn clean test"
+                script{
+                    def mvnHome= tool name: 'Apache Maven 3.9.1', type: 'maven'
+                    sh "${mvnHome}/bin/mvn clean test"
+                }
             }
         }
 //         stage ('Intergration test') {
