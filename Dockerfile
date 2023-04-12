@@ -5,7 +5,7 @@ RUN mvn clean package
 
 FROM tomcat
 COPY --from=build /usr/target/*.war /usr/local/tomcat/webapps/webmvn.war
-EXPOSE 9090
+EXPOSE 8080
 RUN echo "completing setup"
 
 # FROM openjdk:11.0
