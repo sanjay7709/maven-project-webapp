@@ -4,7 +4,7 @@ COPY . .
 RUN mvn clean package
 
 FROM tomcat
-COPY --from=build /usr/target/*.war /usr/local/tomcat/webapp
+COPY --from=build /usr/target/*.war /usr/local/tomcat/webapps/webmvn.war
 EXPOSE 9090
 RUN echo "completing setup"
 
